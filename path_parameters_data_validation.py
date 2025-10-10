@@ -23,7 +23,6 @@ async def band(band_id: int) ->dict:
         raise HTTPException(status_code=404, detail='Band not found')
     return band
 
-
 class GenreURLChoices(Enum):  #using enum to take predefined genre categories or values
     Rock= 'rock'
     Electronic = 'electronic'
