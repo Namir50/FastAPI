@@ -5,7 +5,9 @@ app = FastAPI()
 
 BANDS = [
     {'id': 1, 'name': 'The Kinks', 'genre': 'Rock'},
-    {'id': 2, 'name': 'Aphex Twin', 'genre': 'Electronic'},
+    {'id': 2, 'name': 'Aphex Twin', 'genre': 'Electronic','albums':[
+        {'title':'Mater of reality','release_date': '1971-01-24'}
+    ]},
     {'id': 3, 'name': 'Slowdive', 'genre': 'Classical'},
     {'id': 4, 'name': 'Wu-Tang Clan', 'genre': 'Hip-Hop'},
 ]
