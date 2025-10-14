@@ -7,7 +7,9 @@ app = FastAPI()
 
 BANDS = [
     {'id': 1, 'name': 'The Kinks', 'genre': 'Rock'},
-    {'id': 2, 'name': 'Aphex Twin', 'genre': 'Electronic'},
+    {'id': 2, 'name': 'Aphex Twin', 'genre': 'Electronic','albums':[
+        {'title':'Mater of reality','release_date': '1971-01-24'}
+    ]},
     {'id': 3, 'name': 'Slowdive', 'genre': 'Classical'},
     {'id': 4, 'name': 'Wu-Tang Clan', 'genre': 'Hip-Hop'},
 ]
@@ -24,9 +26,29 @@ async def basicbands(genre: Optional[str]=None):
 #query parameter lets you use the same endpoint for multiple behaviors, depending on what parameters are passed
 #with pydantic
 @app.get('/bands')
-async def bands(genre:GenreURLChoices | None = None) -> list[Band]:
+async def bands(
+    genre: GenreURLChoices | None = None,
+    has_albums: bool = False
+) -> list[Band]:
+
+    filtered_bands = BANDS  # start with all bands
+
+    # Filter by genre if provided
     if genre:
-        return [
-            Band(**b) for b in BANDS if b['genre'].lower() == genre.value
+        filtered_bands = [
+            b for b in filtered_bands
+            if b['genre'].lower() == genre.value.lower()
         ]
-    return [Band(**b) for b in BANDS]
+
+    # Filter by albums if requested
+    if has_albums:
+        filtered_bands = [
+            b for b in filtered_bands
+            if len(b.get('albums', [])) > 0
+        ]
+
+    if not filtered_bands:
+        raise HTTPException(status_code=404, detail="No bands found matching criteria")
+
+    return [Band(**b) for b in filtered_bands]
+    
