@@ -11,7 +11,7 @@ class GenreURLChoices(Enum):
 
 class Album(BaseModel):
     title: str
-    release_date = date
+    release_date : date
 
 class BandBase(BaseModel):
     name: str

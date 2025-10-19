@@ -28,16 +28,21 @@ async def bands(
     if has_albums:
         band_list = [
             b for b in band_list
-            if len(b.get('albums', [])) > 0
+            if len(getattr(b, 'albums', [])) > 0
         ]
     
     return band_list
-
 
 @app.get('/band/{band_id}')
 async def band(band_id: int) -> BandwithID:
     band = next((BandwithID(**b) for b in BANDS if b['id'] == band_id),None)
     if band is None:
-        return HTTPException(status_code=404, detail=f'Band with {band_id} not found')
+        return HTTPException(status_code=404, detail=f'Band with id {band_id} not found')
 
-
+#post request
+@app.post('/bands')
+async def create_band(band_data: BandCreate) -> BandwithID:
+    id = (max(b['id'] for b in BANDS)+1) if BANDS else 1
+    band = BandwithID(id = id, **band_data.model_dump()).model_dump()
+    BANDS.append(band)
+    return band

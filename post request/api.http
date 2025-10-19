@@ -1,0 +1,20 @@
+POST http://localhost:8000/bands/
+Content-Type:  application/json
+
+{
+    "name": "One direction",
+    "genre": "pop",
+    "albums": [
+        {
+            "title": "Night changes",
+            "release_date":"2015-10-10"
+        }
+    ]
+}
+
+
+###
+GET http://localhost:8000/bands/
+
+###
+GET http://localhost:8000/bands/?genre=classical
