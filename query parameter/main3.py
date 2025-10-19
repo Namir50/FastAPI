@@ -52,3 +52,8 @@ async def bands(
 
     return [Band(**b) for b in filtered_bands]
     
+
+
+#http://127.0.0.1:8000/bands?genre=rock
+#http://127.0.0.1:8000/bands?has_albums=true
+#http://127.0.0.1:8000/bands?genre=electronic&has_albums=true
