@@ -19,9 +19,10 @@ def root():
 def get_posts():
     return {"data":"this is your post"}
 
-@app.post("/createpost")
-def create_post(new_post: Post):
-    print(new_post.title)  #prints in terminal
-    print(new_post.content) #prints in terminal
-    print(new_post.published)
-    return {"data":new_post}
+@app.post("/posts")
+def create_post(post: Post):
+    print(post.dict())
+    print(post.title)  #prints in terminal
+    print(post.content) #prints in terminal
+    print(post.published)
+    return {"data":post}
