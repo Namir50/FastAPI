@@ -34,8 +34,17 @@ def create_post(post: Post):
     # print(post.published)
     return {"data":post_dict}
 
+@app.get("/post/latest")
+def get_latest_post():
+    if not my_post:
+        return {"error": "No posts found"}
+    return {"data": my_post[-1]}
+
 @app.get("/post/{id}")
-def get_post(id):
+def get_post(id: int):
     for p in my_post:
-        if p['id'] == (id):
-            return {"data":p}
+        if p['id'] == id:
+            return {"data": p}
+    return {"error": "Post not found"}
+
+
