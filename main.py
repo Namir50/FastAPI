@@ -23,7 +23,7 @@ def root():
 def get_posts():
     return {"data":my_post}
 
-@app.post("/posts")
+@app.post("/posts", status_code=201)  #since status code for creating something is 201
 def create_post(post: Post):
     print(post.dict())
     post_dict = post.dict()
