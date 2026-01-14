@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response,HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
@@ -45,6 +45,7 @@ def get_post(id: int):
     for p in my_post:
         if p['id'] == id:
             return {"data": p}
-    return {"error": "Post not found"}
+    raise HTTPException(status_code=404, detail=f"post id {id} not found")
+    
 
 
