@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
-
+from random import randrange
 app = FastAPI()
 
 class Post(BaseModel):
@@ -26,7 +26,16 @@ def get_posts():
 @app.post("/posts")
 def create_post(post: Post):
     print(post.dict())
-    print(post.title)  #prints in terminal
-    print(post.content) #prints in terminal
-    print(post.published)
-    return {"data":post}
+    post_dict = post.dict()
+    post_dict['id'] = randrange(0,1000000)
+    my_post.append(post_dict)
+    # print(post.title)  #prints in terminal
+    # print(post.content) #prints in terminal
+    # print(post.published)
+    return {"data":post_dict}
+
+@app.get("/post/{id}")
+def get_post(id):
+    for p in my_post:
+        if p['id'] == (id):
+            return {"data":p}
