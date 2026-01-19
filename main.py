@@ -48,4 +48,12 @@ def get_post(id: int):
     raise HTTPException(status_code=404, detail=f"post id {id} not found")
     
 
-
+@app.delete("/deletepost/{id}")
+def delete_post(id: int):
+    for i, p in enumerate(my_post):
+        if p['id'] == id:
+            my_post.pop(i)
+            return {"message":"Post deleted"}
+        
+    raise HTTPException(status_code=404, detail="Post not found")
+    
