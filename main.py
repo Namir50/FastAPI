@@ -11,6 +11,8 @@ class Post(BaseModel):
     published: bool = True #if the user doesn't provide this value it will default to true
     rating: Optional[int] = None #if the user doesn't provide this value it will default to None
 
+
+
 #story the data in the memory just for now before moving to database
 my_post = [{"id":1,"title": "title of post 1", "content": "content of post 1", "published": True}, 
         {"id":2,"title": "title of post 2", "content": "content of post 2", "published": False}]
@@ -56,4 +58,16 @@ def delete_post(id: int):
             return {"message":"Post deleted"}
         
     raise HTTPException(status_code=404, detail="Post not found")
+
+@app.put("/updatepost/{id}")
+def update_post(id:int, updated_post: Post):
+    for i, p in enumerate(my_post):
+        if p["id"] == id:
+            my_post[i]['title'] = updated_post.title
+            my_post[i]['content'] = updated_post.content
+            return {"message":"Post updated successfully"}
+    
+    raise HTTPException(status_code=404, detail="Post not found")
+
+
     
