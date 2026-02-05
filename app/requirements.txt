@@ -1,0 +1,6 @@
+fastapi
+FastAPI
+pydantic
+fastapi.params
+psycopg2
+psycopg2.extras
