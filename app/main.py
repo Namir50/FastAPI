@@ -60,7 +60,13 @@ def create_post(post: Post):
     # # print(post.content) #prints in terminal
     # # print(post.published)
     # return {"data":post_dict}
-    cursor.execute("""INSERT INTO posts (title, content, published) VALUES(%s, %s, %s)""", (post.title, post.content, post.published))
+    cursor.execute("""INSERT INTO posts (title, content, published) VALUES(%s, %s, %s)  RETURNING * """, 
+                    (post.title, post.content, post.published))
+    new_post = cursor.fetchone()
+    conn.commit()
+    return {"data":new_post}
+
+    
 
 @app.get("/post/latest")
 def get_latest_post():
