@@ -76,11 +76,16 @@ def get_latest_post():
 
 @app.get("/post/{id}")
 def get_post(id: int):
-    for p in my_post:
-        if p['id'] == id:
-            return {"data": p}
-    raise HTTPException(status_code=404, detail=f"post id {id} not found")
-    
+    # for p in my_post:
+    #     if p['id'] == id:
+    #         return {"data": p}
+    # raise HTTPException(status_code=404, detail=f"post id {id} not found")
+    cursor.execute("""SELECT * FROM posts WHERE id = %s""",(str(id)))
+    post = cursor.fetchone()
+    if not post:
+        return HTTPException(status_code='404',detail = f"post with {id} not found")
+    return {"data" :post}
+
 
 @app.delete("/deletepost/{id}")
 def delete_post(id: int):
