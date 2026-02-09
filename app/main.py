@@ -80,7 +80,7 @@ def get_post(id: int):
     #     if p['id'] == id:
     #         return {"data": p}
     # raise HTTPException(status_code=404, detail=f"post id {id} not found")
-    cursor.execute("""SELECT * FROM posts WHERE id = %s""",(str(id)))
+    cursor.execute("""SELECT * FROM posts WHERE id = %s""",(str(id),))
     post = cursor.fetchone()
     if not post:
         return HTTPException(status_code='404',detail = f"post with {id} not found")
@@ -89,12 +89,17 @@ def get_post(id: int):
 
 @app.delete("/deletepost/{id}")
 def delete_post(id: int):
-    for i, p in enumerate(my_post):
-        if p['id'] == id:
-            my_post.pop(i)
-            return {"message":"Post deleted"}
+    # for i, p in enumerate(my_post):
+    #     if p['id'] == id:
+    #         my_post.pop(i)
+    #         return {"message":"Post deleted"}
         
-    raise HTTPException(status_code=404, detail="Post not found")
+    # raise HTTPException(status_code=404, detail="Post not found")
+    cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING *""",(str(id),))
+    deleted_post = cursor.fetchone()
+    conn.commit()
+    return {"data": deleted_post, "message": "Post deleted successfully"}
+
 
 @app.put("/updatepost/{id}")
 def update_post(id:int, updated_post: Post):
