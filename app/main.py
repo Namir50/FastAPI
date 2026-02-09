@@ -44,18 +44,23 @@ def root():
 
 @app.get("/posts")
 def get_posts():
-    return {"data":my_post}
+    cursor.execute("""select * from posts""")
+    posts = cursor.fetchall()
+    # print(posts)
+    # return {"data":my_post}
+    return {"data":posts}
 
 @app.post("/posts", status_code=201)  #since status code for creating something is 201
 def create_post(post: Post):
-    print(post.dict())
-    post_dict = post.dict()
-    post_dict['id'] = randrange(0,1000000)
-    my_post.append(post_dict)
-    # print(post.title)  #prints in terminal
-    # print(post.content) #prints in terminal
-    # print(post.published)
-    return {"data":post_dict}
+    # print(post.dict())
+    # post_dict = post.dict()
+    # post_dict['id'] = randrange(0,1000000)
+    # my_post.append(post_dict)
+    # # print(post.title)  #prints in terminal
+    # # print(post.content) #prints in terminal
+    # # print(post.published)
+    # return {"data":post_dict}
+    cursor.execute("""INSERT INTO posts (title, content, published) VALUES(%s, %s, %s)""", (post.title, post.content, post.published))
 
 @app.get("/post/latest")
 def get_latest_post():
