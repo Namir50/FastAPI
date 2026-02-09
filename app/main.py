@@ -83,7 +83,7 @@ def get_post(id: int):
     cursor.execute("""SELECT * FROM posts WHERE id = %s""",(str(id),))
     post = cursor.fetchone()
     if not post:
-        return HTTPException(status_code='404',detail = f"post with {id} not found")
+        return HTTPException(status_code=404,detail = f"post with {id} not found")
     return {"data" :post}
 
 
@@ -97,19 +97,31 @@ def delete_post(id: int):
     # raise HTTPException(status_code=404, detail="Post not found")
     cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING *""",(str(id),))
     deleted_post = cursor.fetchone()
+
+    if not deleted_post:
+        raise HTTPException(status_code=404, detail=f"post with id {id} not found")
+        
     conn.commit()
     return {"data": deleted_post, "message": "Post deleted successfully"}
 
 
 @app.put("/updatepost/{id}")
-def update_post(id:int, updated_post: Post):
-    for i, p in enumerate(my_post):
-        if p["id"] == id:
-            my_post[i]['title'] = updated_post.title
-            my_post[i]['content'] = updated_post.content
-            return {"message":"Post updated successfully"}
+def update_post(id:int, post: Post):
+    # for i, p in enumerate(my_post):
+    #     if p["id"] == id:
+    #         my_post[i]['title'] = updated_post.title
+    #         my_post[i]['content'] = updated_post.content
+    #         return {"message":"Post updated successfully"}
     
-    raise HTTPException(status_code=404, detail="Post not found")
+    # raise HTTPException(status_code=404, detail="Post not found")S
+    cursor.execute("""UPDATE posts SET title = %s, content = %s, published = %s  WHERE id = %s RETURNING *""", (post.title, post.content, post.published))
+    updated_post = cursor.fetchone()
+    
+    if updated_post is None:
+        raise HTTPException(status_code=404, detail=f"post with id {id} not found")
+    
+    conn.commit()
+    return {"data": updated_post, "message": "Post updated successfully"}
 
 
     
