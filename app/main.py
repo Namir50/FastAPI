@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response,HTTPException
+from fastapi import FastAPI, Response,HTTPException, Depends
 from fastapi.params import Body
 import psycopg2
 import os
@@ -8,10 +8,22 @@ from random import randrange
 from psycopg2.extras import RealDictCursor
 import time
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
+import models
+from database import engine, SessionLocal
+
+models.Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 
 app = FastAPI()
+
+def get_db():
+    db  = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 class Post(BaseModel):
     title: str
@@ -41,6 +53,10 @@ my_post = [{"id":1,"title": "title of post 1", "content": "content of post 1", "
 @app.get("/")
 def root():
     return {"message":"welcome to my api"}
+
+@app.get("/sqlalchemy")
+def test_post(db: Session = Depends(get_db)):
+    return {"status":"success"}
 
 @app.get("/posts")
 def get_posts():
